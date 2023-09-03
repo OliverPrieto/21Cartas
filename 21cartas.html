@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html>
+    <head>
+        <title>Truco21Cartas</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <script>
+            // DEFINICIÓN DE CONSTANTES Y VARIABLES
+            const MAX_TARJETAS_GRUPO= 7; //Tarjetas por grupo
+            const MAX_GRUPOS= 3; //Cantidad de grupos
+            const MAX_TARJETAS= MAX_TARJETAS_GRUPO*MAX_GRUPOS; //Total de tarjetas.
+            const MIN_TARJETA_VALOR= 'A'; //Tarjeta inicial, en este caso letra A.
+            const MAX_TARJETA_VALOR=String.fromCharCode(MAX_TARJETAS+MIN_TARJETA_VALOR.charCodeAt()-1);
+            var grupo1= new Array(MAX_TARJETAS_GRUPO),
+                        grupo2 = new Array(MAX_TARJETAS_GRUPO),
+                        grupo3 = new Array(MAX_TARJETAS_GRUPO);
+                var deck = new Array(MAX_TARJETAS);
+                var arregloreubicado = new Array(MAX_TARJETAS_GRUPO);
+                var columnaSeleccionada;
+                var impresionGrupo = "", impresionGrupo1 = "", impresionGrupo2 = "";
+                var secuencia;
+                //
+                for (let i = 0; i <= MAX_TARJETAS - 1; i++) {
+                    celdaMenos = 0;
+                    indice = Math.floor(Math.random() * (MAX_TARJETA_VALOR.charCodeAt() - MIN_TARJETA_VALOR.charCodeAt() + 1)) + MIN_TARJETA_VALOR.charCodeAt();
+                    while (celdaMenos < i) { //trabaja por la celda actual
+                        if (deck[celdaMenos] === String.fromCharCode(indice)) {
+                            indice = Math.floor(Math.random() * (MAX_TARJETA_VALOR.charCodeAt() - MIN_TARJETA_VALOR.charCodeAt() + 1)) + MIN_TARJETA_VALOR.charCodeAt();
+                            celdaMenos = -1;
+                        }
+                        celdaMenos += 1;
+                    }//fin del while
+                    deck[i] = String.fromCharCode(indice);
+                }//FIN DE LA CARGA DE LETRAS ALEATORIAS EN EL ARREGLO DECK
+                //
+                //CARGAMOS EN CADA GRUPO LAS LETRAS QUE SE ENCUENTRAN DENTRO DEL ARREGLO DECK
+                for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                    grupo1[i] = deck[i];
+                }
+                for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                    grupo2[i] = deck[i + (MAX_TARJETAS_GRUPO)];
+                }
+                for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                    grupo3[i] = deck[i + ((MAX_TARJETAS_GRUPO) * 2)];
+                }
+                //
+                //MOSTRAMOS LOS GRUPOS
+                for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                    impresionGrupo += grupo1[i] + "  " + grupo2[i] + "  " + grupo3[i] + "\n";
+                }
+                //
+                correcto = false;
+                secuencia = 1;
+                while (secuencia <= 3) {
+                    if (secuencia == 1) {
+                        columnaSeleccionada = window.prompt("Haremos 3 secuencias. Empecemos..." + "\n" +
+                                "Secuencia " + secuencia + " : " + "\n" + "\n" + impresionGrupo + "\n" + "En que grupo esta tu carta[1,2,3]:");
+                        document.write("Haremos 3 secuencias. Empecemos..." + "<br>" + "Secuencia " + secuencia + ":" + "<br>" + "<br>");
+                        for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                            document.write(grupo1[i] + grupo2[i] + grupo3[i]);
+                            document.write("<br>");
+                        }
+                        document.write(">> " + columnaSeleccionada + "<br>" + "<br>");
+                        while (correcto == false) {
+                            if ((columnaSeleccionada != '1') && (columnaSeleccionada != '2') && (columnaSeleccionada != '3')) {
+                                columnaSeleccionada = window.prompt("ERROR - Opcion incorrecta, ingresa una opcion valida[1,2,3]: ");
+                                document.write("ERROR - Opcion incorrecta, ingresa una opcion valida[1,2,3]: " + "<br>");
+                                document.write(">> " + columnaSeleccionada + "<br>" + "<br>");
+                                correcto = false;
+                            } else {
+                                correcto = true;
+                            }
+                        }
+                    }
+                    if (secuencia == 2) {
+                        if (columnaSeleccionada == '1') {
+                            //cargar deck dejando la columna elegida al medio
+                            for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                                deck[i] = grupo2[i];
+                            }
+                            for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                                deck[i + 7] = grupo1[i];
+                            }
+                            for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                                deck[i + 14] = grupo3[i];
+                            }
+                            // fin de la carga
+                            //cargar un arreglo bidimensional para intercalarlos
+                            for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                                arregloreubicado[i] = new Array(MAX_GRUPOS);
+                            }//fin de la carga
+                            //mostrar el arreglobidimensional
+                            k = 0;
+                            for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                                for (let j = 0; j <= MAX_GRUPOS - 1; j++) {
+                                    arregloreubicado[i][j] = deck[k];
+                                    k = k + 1;
+                                }
+                            } //FIN DE LA OPCION 1
+                        } else if (columnaSeleccionada == '2') {     //SI SE ELIGE LA COLUMNA 2
+                            //cargar deck dejando la columna elegida al medio
+                            for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                                deck[i] = grupo3[i];
+                            }
+                            for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                                deck[i + 7] = grupo2[i];
+                            }
+                            for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                                deck[i + 14] = grupo1[i];
+                            }
+                            // fin de la carga
+                            //cargar un arreglo bidimensional para intercalar
+                            for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                                arregloreubicado[i] = new Array(MAX_GRUPOS);
+                            }
+                            //fin de la carga
+                            //mostrar el arreglobidimensional
+                            k = 0;
+                            for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                                for (let j = 0; j <= MAX_GRUPOS - 1; j++) {
+                                    arregloreubicado[i][j] = deck[k];
+                                    k = k + 1;
+                                }
+                            }
+                            console.log(arregloreubicado);
+                        }//FIN DEL LA OPCION 2
+                        else if (columnaSeleccionada == '3') {
+                            //cargar deck dejando la columna elegida al medio
+                            for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                                deck[i] = grupo1[i];
+                            }
+                            for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                                deck[i + 7] = grupo3[i];
+                            }
+                            for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                                deck[i + 14] = grupo2[i];
+                            }
+                            // fin de la carga
+                            //cargar un arreglo bidimensional para intercalar
+
+                            for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                                arregloreubicado[i] = new Array(MAX_GRUPOS);
+                            }
+                            //fin de la carga
+                            //mostrar el arreglobidimensional
+                            k = 0;
+                            for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                                for (let j = 0; j <= MAX_GRUPOS - 1; j++) {
+                                    arregloreubicado[i][j] = deck[k];
+                                    k = k + 1;
+                                }
+                            }
+                        }
+                        //SE DESCOMPONE EL ARREGLOREUBICADO QUE ES UNA MATRIZ PARA PODER SACAR CADA UNA DE SUS COLUMNAS Y MOSTRARLAS EN LOS GRUPOS
+                        for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                            for (let j = 0; j <= MAX_GRUPOS - 3; j++) {
+                                grupo1[i] = arregloreubicado[i][j];
+                                console.log(grupo1[i]);
+                            }
+                        }
+                        for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                            for (let j = 1; j <= MAX_GRUPOS - 2; j++) {
+                                grupo2[i] = arregloreubicado[i][j];
+                                console.log(grupo2[i]);
+                            }
+                        }
+                        for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                            for (let j = 2; j <= MAX_GRUPOS - 1; j++) {
+                                grupo3[i] = arregloreubicado[i][j];
+                                console.log(grupo3[i]);
+                            }
+                        }
+                        //For para mostrar los elementos del arreglo dentro de un string
+                        for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                            impresionGrupo1 += grupo1[i] + " " + grupo2[i] + " " + grupo3[i] + "\n";
+                        }
+                        //
+                        correcto = false;
+                        columnaSeleccionada = window.prompt("Secuencia " + secuencia + " : " + "\n" + "\n" + impresionGrupo1 + "\n" + "En que grupo esta tu carta[1,2,3]:");
+                        document.write("Secuencia " + secuencia + ":" + "<br>" + "<br>");
+                        for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                            document.write(grupo1[i] + grupo2[i] + grupo3[i]);
+                            document.write("<br>");
+                        }
+                        document.write(">> " + columnaSeleccionada + "<br>" + "<br>");
+                        while (correcto == false) {
+                            if ((columnaSeleccionada != '1') && (columnaSeleccionada != '2') && (columnaSeleccionada != '3')) {
+                                columnaSeleccionada = window.prompt("ERROR - Opcion incorrecta, ingresa una opcion valida[1,2,3]");
+                                document.write("ERROR - Opcion incorrecta, ingresa una opcion valida[1,2,3]: " + "<br>");
+                                document.write(">> " + columnaSeleccionada + "<br>" + "<br>");
+                                correcto = false;
+                            } else {
+                                correcto = true;
+                            }
+                        }
+                    }
+                    if (secuencia == 3) {//INICIO DE LA SECUENCIA 3
+                        if (columnaSeleccionada == '1') {
+                            //cargar deck dejando la columna elegida al medio
+                            for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                                deck[i] = grupo2[i];
+                            }
+
+                            for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                                deck[i + 7] = grupo1[i];
+                            }
+                            for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                                deck[i + 14] = grupo3[i];
+                            }
+                            // fin de la carga
+                            //cargar un arreglo bidimensional para intercalar
+
+                            for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                                arregloreubicado[i] = new Array(MAX_GRUPOS - 1);
+
+                            }//fin de la carga
+                            //mostrar el arreglobidimensional
+                            k = 0;
+                            for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                                for (let j = 0; j <= MAX_GRUPOS - 1; j++) {
+                                    arregloreubicado[i][j] = deck[k];
+                                    k = k + 1;
+                                }
+                            } //FIN DE LA OPCION 1
+
+                        } else if (columnaSeleccionada == '2') {     //SI SE ELIGE LA COLUMNA 2
+
+                            //cargar deck dejando la columna elegida al medio
+                            for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                                deck[i] = grupo3[i];
+                            }
+                            for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                                deck[i + 7] = grupo2[i];
+                            }
+                            for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                                deck[i + 14] = grupo1[i];
+                            }
+                            // fin de la carga
+                            //cargar un arreglo bidimensional para intercalar
+                            for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                                arregloreubicado[i] = new Array(MAX_GRUPOS - 1);
+                            }
+                            //fin de la carga
+                            //mostrar el arreglobidimensional
+                            k = 0;
+                            for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                                for (let j = 0; j <= MAX_GRUPOS - 1; j++) {
+                                    arregloreubicado[i][j] = deck[k];
+                                    k = k + 1;
+                                }
+                            }
+                        }//FIN DEL LA OPCION 2
+                        else if (columnaSeleccionada == '3') {
+                            //cargar deck dejando la columna elegida al medio
+                            for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                                deck[i] = grupo1[i];
+                            }
+                            for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                                deck[i + 7] = grupo3[i];
+                            }
+                            for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                                deck[i + 14] = grupo2[i];
+                            }
+                            // fin de la carga
+                            //cargar un arreglo bidimensional para intercalar
+
+                            for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                                arregloreubicado[i] = new Array(MAX_GRUPOS - 1);
+                            }
+                            //fin de la carga
+                            //mostrar el arreglobidimensional
+                            k = 0;
+                            for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                                for (let j = 0; j <= MAX_GRUPOS - 1; j++) {
+                                    arregloreubicado[i][j] = deck[k];
+                                    k = k + 1;
+                                }
+
+                            }
+                        }
+                        //Este for es para descomponer los grupos que se van a imprimir en consola
+                        for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                            for (let j = 0; j <= MAX_GRUPOS - 3; j++) {
+                                grupo1[i] = arregloreubicado[i][j];
+                            }
+                        }
+                        for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                            for (let j = 1; j <= MAX_GRUPOS - 2; j++) {
+                                grupo2[i] = arregloreubicado[i][j];
+                            }
+                        }
+                        for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                            for (let j = 2; j <= MAX_GRUPOS - 1; j++) {
+                                grupo3[i] = arregloreubicado[i][j];
+                            }
+                        }//
+                        //Guardar dentro del string el arreglo
+                        for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                            impresionGrupo2 += grupo1[i] + " " + grupo2[i] + " " + grupo3[i] + "\n";
+                        }
+                        correcto = false;
+                        columnaSeleccionada = window.prompt("Secuencia " + secuencia + " : " + "\n" + "\n" + impresionGrupo2 + "\n" + "En que grupo esta tu carta[1,2,3]:");
+                        document.write("Secuencia " + secuencia + ":" + "<br>" + "<br>");
+                        for (let i = 0; i <= MAX_TARJETAS_GRUPO - 1; i++) {
+                            document.write(grupo1[i] + grupo2[i] + grupo3[i] + "<br>");
+                        }
+                        document.write(">> " + columnaSeleccionada + "<br>" + "<br>");
+                        while (correcto == false) {
+                            if ((columnaSeleccionada != '1') && (columnaSeleccionada != '2') && (columnaSeleccionada != '3')) {
+                                columnaSeleccionada = window.prompt("ERROR - Opcion incorrecta, ingresa una opcion valida[1,2,3]: ");
+                                document.write("ERROR - Opcion incorrecta, ingresa una opcion valida[1,2,3]: " + "<br>");
+                                document.write(">> " + columnaSeleccionada + "<br>" + "<br>");
+                                correcto = false;
+                            } else {
+                                correcto = true;
+                            }
+                        }
+                    }  //FIN DE LA SECUENCIA 3
+                    secuencia = secuencia + 1;
+                }
+                if ((secuencia = 3) && (columnaSeleccionada == '1') && (correcto == true)) {
+                    window.alert("Obviamente elegiste la " + grupo1[3]);
+                    document.write("Obviamente elegiste la " + grupo1[3]);
+                } else if ((secuencia = 3) && (columnaSeleccionada == '2') && (correcto == true)) {
+                    window.alert("Obviamente elegiste la " + grupo2[3]);
+                    document.write("Obviamente elegiste la " + grupo2[3]);
+                } else if ((secuencia = 3) && (columnaSeleccionada == '3' && (correcto == true))) {
+                    window.alert("Obviamente elegiste la " + grupo3[3]);
+                    document.write("Obviamente elegiste la " + grupo3[3]);
+                }
+  
+        </script>
+    </body>
+</html>
